@@ -1,0 +1,27 @@
+<%
+  var atts = _.omit(model.attributes, model.stale),
+      readOnlyFlds = _.pick(atts, model.readOnlyFlds),
+      editFlds = _.omit(atts, model.readOnlyFlds),
+      edit = false;
+
+  _.each(atts, function(val, key) {
+    _.each(editFlds, function(editable) {
+      if(val === editable) {
+        edit = true;
+      }
+    })
+
+    if(edit) {
+%>    <td><input type="text" class="<%= key %>" value="<%= val %>"></td> <%
+    } else {
+%>    <td><%= val %></td> <%
+    } %>
+<%
+    edit = false;
+  })
+%>
+<td>
+  <button class="edit-dim">EDIT</button>
+  <button class="remove-dim">REMOVE</button>
+</td>
+

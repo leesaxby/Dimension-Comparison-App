@@ -1,0 +1,14 @@
+<%
+  var atts = _.omit(collection.models[0].attributes, collection.models[0].stale);
+      heads = _.keys(atts),
+      headsLen = heads.length;
+%>
+<thead>
+<%
+  for(var i=0; i < headsLen; i++) {
+%>
+  <th class="<%= heads[i] %>"><%= heads[i].replace('_', ' ') %></th>
+<%
+  }
+%>
+</thead>

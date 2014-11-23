@@ -1,0 +1,9 @@
+<%
+  var atts = _.omit(model.attributes, model.stale);
+  _.each(atts, function(prop) {
+%>
+  <td><%= prop %></td>
+<%
+    })
+%>
+
