@@ -10,11 +10,17 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
         'click td': 'setEditDim'
       },
       initialize: function(opt) {
+        var editFlds = _.keys(_.omit(this.model.attributes, this.model.readOnlyFlds));
+
         this.parentView = opt.parentView;
         this.listenTo(this.model, 'destroy', this.removeView);
-        this.listenTo(this.model, 'change', this.render);
         this.model.on('change:visible', this.visible, this);
         this.model.on('change:edit', this.highlight, this);
+
+        for (var i = editFlds.length; i-- > 0; ) {
+          this.model.on('change:'+editFlds[i] , this.render, this);
+        }
+
       },
       render: function() {
         this.$el.html( this.template( { model: this.model } ) );

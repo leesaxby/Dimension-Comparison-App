@@ -7,7 +7,7 @@ define(['backbone'], function(Backbone) {
       last_record: 0
     },
     stale: ['edit', 'visible', 'last_record'],
-    readOnlyFlds: ['id', 'start_date', 'end_date', 'system', 'system_key', 'system_description', 'create_timestamp'],
+    readOnlyFlds: ['id', 'start_date', 'end_date', 'system', 'system_key', 'system_description', 'create_timestamp','edit', 'visible', 'last_record'],
     methodToURL: {
     'create': 'api/create.php',
     'update': 'api/update.php',
