@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'text!templates/dimension-template.html'],
+define(['jquery', 'underscore', 'backbone', 'text!templates/dimension-template.html', 'zebra_datepicker'],
   function($, _, Backbone, DimTemp) {
 
     var DimensionView = Backbone.View.extend({
@@ -8,8 +8,11 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/dimension-template.h
 
       events: {
         'click .save-dim': 'saveDim',
-        'click .new-dim': 'createNew',
+        'click .new-dim': 'newControls',
+        'click .delete-dim': 'deleteDim',
         'click .remove-dim': 'removeEdit',
+        'click .create-new-dim' : 'createNew',
+        'click .cancel-new-dim' : 'cancelNew',
         'mouseover td': 'showControls',
         'mouseleave td': 'hideControls',
         'keyup input': 'suggest'
@@ -30,12 +33,37 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/dimension-template.h
         })
         this.model.save(saveData)
       },
-      createNew: function() {
-        this.parentView.createSaveView( this.model );
+      newControls: function() {
+        this.$('.dim-controls, .edit-controls').toggle();
+
+
+      },
+      deleteDim: function() {
+        if(this.model.get('last_record') == 1) {
+          this.model.destroy();
+        } else {
+          console.log('Only the last record can be deleted')
+        }
       },
       removeEdit: function() {
         this.model.set({edit: false});
         this.removeView();
+      },
+      createNew: function() {
+        this.$('.create-new-dim, .save-new-dim').toggle();
+        this.$('.start_date').toggle();
+        this.$('.start_date_td').append('<input type="text" class="datepicker start_date_new">');
+        this.$('input.datepicker').Zebra_DatePicker();
+
+      },
+      cancelNew: function() {
+        if(this.$('.start_date_new').length !== 0) {
+          console.log(this.$('.start_date_new').length)
+          this.$('input.datepicker').data('Zebra_DatePicker').destroy();
+          this.$('.start_date_new').remove();
+          this.$('.create-new-dim, .save-new-dim, .start_date').toggle();
+        }
+        this.$('.dim-controls, .edit-controls').toggle();
       },
       showControls: function(e) {
         this.$('.save-dim, .new-dim, .remove-dim').css('visibility', 'visible');

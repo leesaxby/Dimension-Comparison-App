@@ -1,5 +1,5 @@
-define(['backbone', 'collections/dimensions', 'views/dimension', 'views/explore', 'views/save','text!templates/app-template.html', 'text!templates/explore-head-template.html'],
-  function(Backbone, Dimensions, DimensionView, ExploreView, SaveView, appTemp, headTemp) {
+define(['backbone', 'collections/dimensions', 'views/dimension', 'views/explore', 'text!templates/app-template.html', 'text!templates/explore-head-template.html'],
+  function(Backbone, Dimensions, DimensionView, ExploreView, appTemp, headTemp) {
 
     var AppView = Backbone.View.extend({
 
@@ -43,10 +43,6 @@ define(['backbone', 'collections/dimensions', 'views/dimension', 'views/explore'
           var dimView = new DimensionView( {model: dimension, parentView: this} );
           this.$('#edit-tbl').append( dimView.render().el );
         }
-      },
-      createSaveView: function( dimension ) {
-        var saveView = new SaveView( {model: dimension} );
-        this.$el.append( saveView.render().el )
       },
       editToggle: function() {
         var edit_list = this.$('#edit-list');

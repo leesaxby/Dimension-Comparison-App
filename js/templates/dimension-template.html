@@ -14,15 +14,23 @@
     if(edit) {
 %>    <td><input type="text" class="<%= key %>" value="<%= val %>"></td> <%
     } else {
-%>    <td><%= val %></td> <%
+%>    <td class="<%= key + "_td" %>"><span class="<%= key %>"><%= val %></span></td> <%
     } %>
 <%
     edit = false;
   })
 %>
 <td>
-  <button class="save-dim">SAVE</button>
-  <button class="new-dim">EDIT</button>
-  <button class="remove-dim">REMOVE</button>
+  <div class="dim-controls">
+    <button class="save-dim">SAVE</button>
+    <button class="new-dim">EDIT</button>
+    <button class="remove-dim">REMOVE</button>
+  </div>
+  <div class="edit-controls">
+    <button class="create-new-dim">NEW</button>
+    <button class="save-new-dim">SAVE</button>
+    <button class="delete-dim">DELETE</button>
+    <button class="cancel-new-dim">CANCEL</button>
+  </div>
 </td>
 

@@ -6,7 +6,7 @@ define(['backbone'], function(Backbone) {
       visible: true,
       last_record: 0
     },
-    stale: ['edit', 'visible', 'last_record'],
+    stale: ['edit', 'visible', 'last_record','create_timestamp'],
     readOnlyFlds: ['id', 'start_date', 'end_date', 'system', 'system_key', 'system_description', 'create_timestamp','edit', 'visible', 'last_record'],
     methodToURL: {
     'create': 'api/create.php',
@@ -30,7 +30,6 @@ define(['backbone'], function(Backbone) {
       modelStr = JSON.stringify(model)
       options.data = { id: modelStr };
     }
-    console.log(options)
     return Backbone.sync.apply(this, arguments);
   }
   })

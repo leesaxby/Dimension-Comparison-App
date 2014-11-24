@@ -5,7 +5,8 @@ require.config({
     'backbone': 'lib/backbone',
     'localStorage': 'lib/backbone.localStorage',
     'text': 'lib/text',
-    'json2': 'lib/json2'
+    'json2': 'lib/json2',
+    'zebra_datepicker': 'lib/zebra_datepicker'
   },
   shim: {
     'underscore': {

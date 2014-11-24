@@ -99,6 +99,16 @@ button {
 .edit-hide {
   height: 15px;
 }
+.dim-controls, .edit-controls {
+  padding: 0px;
+  margin: 0px;
+}
+.edit-controls {
+  display: none;
+}
+.save-new-dim {
+  display: none;
+}
 .save-dim, .new-dim, .remove-dim {
   visibility: hidden;
 }
