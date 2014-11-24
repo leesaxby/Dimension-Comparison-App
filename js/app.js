@@ -4,7 +4,8 @@ require.config({
     'underscore': 'lib/underscore',
     'backbone': 'lib/backbone',
     'localStorage': 'lib/backbone.localStorage',
-    'text': 'lib/text'
+    'text': 'lib/text',
+    'json2': 'lib/json2'
   },
   shim: {
     'underscore': {

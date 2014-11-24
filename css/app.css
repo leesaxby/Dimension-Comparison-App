@@ -50,7 +50,7 @@ button {
   position: fixed;
   width: 100%;
   bottom: 0px;
-  z-index: 99;
+  z-index: 100;
   padding: 0px;
   margin: 0px;
   background: #ffffff;
@@ -58,7 +58,8 @@ button {
   overflow: auto;
 }
 #edit-tbl {
-  margin-top: 20px;
+  position: relative;
+  top: 15px;
 }
 #edit-tbl img {
   height: 22px;
@@ -77,6 +78,7 @@ button {
 #edit-view {
   position: fixed;
   width: 100%;
+  z-index: 100;
   background: #34495e;
   padding: 0px;
   margin: 0px;
@@ -97,7 +99,7 @@ button {
 .edit-hide {
   height: 15px;
 }
-.edit-dim, .remove-dim {
+.save-dim, .new-dim, .remove-dim {
   visibility: hidden;
 }
 #search-container {
@@ -120,11 +122,12 @@ button {
   display: none;
   position: absolute;
   z-index: 99;
-  max-height: 200px;
+  max-height: 150px;
   max-width: 500px;
-  overflow-y: auto;
-  padding: 0px;
-  margin: 0px;
+  padding-right: 20px;
+  overflow:auto;
+  overflow-y:scroll;
+  overflow-x:hidden;
 }
 .suggest-list {
   list-style: none;
@@ -135,7 +138,7 @@ button {
 }
 .suggest-list li {
   width: 100%;
-  height: 0px;
+  --height: 0px;
   font-size: 12px;
   color: #ffffff;
   margin: 0px 0px 2px 0px;

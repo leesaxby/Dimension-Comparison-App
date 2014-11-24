@@ -7,7 +7,8 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/dimension-template.h
       template: _.template( DimTemp ),
 
       events: {
-        'click .edit-dim': 'edit',
+        'click .save-dim': 'saveDim',
+        'click .new-dim': 'createNew',
         'click .remove-dim': 'removeEdit',
         'mouseover td': 'showControls',
         'mouseleave td': 'hideControls',
@@ -15,14 +16,21 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/dimension-template.h
       },
       initialize: function( opt ) {
         this.parentView = opt.parentView;
-
+        this.listenTo(this.model, 'change', this.render)
         this.listenTo(this.model, 'destroy', this.removeView);
       },
       render: function() {
         this.$el.html( this.template( {model: this.model} ) );
         return this;
       },
-      edit: function() {
+      saveDim: function() {
+        var saveData = {};
+        this.$el.find('input').each(function(i, input) {
+          saveData[$(input).prop('class')] = $(input).val();
+        })
+        this.model.save(saveData)
+      },
+      createNew: function() {
         this.parentView.createSaveView( this.model );
       },
       removeEdit: function() {
@@ -30,10 +38,10 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/dimension-template.h
         this.removeView();
       },
       showControls: function(e) {
-        this.$('.edit-dim, .remove-dim').css('visibility', 'visible');
+        this.$('.save-dim, .new-dim, .remove-dim').css('visibility', 'visible');
       },
       hideControls: function(e) {
-        this.$('.edit-dim, .remove-dim').css('visibility', 'hidden');
+        this.$('.save-dim, .new-dim, .remove-dim').css('visibility', 'hidden');
       },
       suggest: function(e) {
         this.parentView.suggestInput = $(this.$(e.target));

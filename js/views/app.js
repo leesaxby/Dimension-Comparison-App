@@ -55,11 +55,12 @@ define(['backbone', 'collections/dimensions', 'views/dimension', 'views/explore'
         } else {
           edit_list.addClass('edit-hide').removeClass('edit-show');
         }
+        this.$('#edit-tbl').toggle();
         $('.show-arrow, hide-arrow').toggle()
       },
       searchColSelect: function( e ) {
         var $colHead = $(e.target);
-        this.$el.find('th').css('background', '');
+        this.$el.find('th').css('background', '#2980b9');
 
         if( this.search_col === $colHead.prop('class') ) {
           this.search_col = null;
@@ -111,9 +112,6 @@ define(['backbone', 'collections/dimensions', 'views/dimension', 'views/explore'
             _.each(matches, function(match) {
               this.$('.suggest-list').append('<li>'+ match +'</li>');
             })
-            this.$('.suggest-container').find('li').animate({
-              'height': '14px'
-            }, 200);
           }
         } else {
           this.hideSuggest();

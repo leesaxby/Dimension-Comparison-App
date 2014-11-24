@@ -11,7 +11,8 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
       },
       initialize: function(opt) {
         this.parentView = opt.parentView;
-        this.listenTo(this.model, 'destroy', this.removeView)
+        this.listenTo(this.model, 'destroy', this.removeView);
+        this.listenTo(this.model, 'change', this.render);
         this.model.on('change:visible', this.visible, this);
         this.model.on('change:edit', this.highlight, this);
       },
