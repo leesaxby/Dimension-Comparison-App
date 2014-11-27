@@ -1,4 +1,7 @@
 Dimension-Comparison-App
 ========================
 
-Compare and edit database dimensions/records.  Backbone app to compare and edit database dimensions/records. Overridden Model and Sync to provide non RESTfull persistence.
+Backbone app to compare, edit update and create new instances of database dimensions/records.
+This enables end users to open, close and delete database dimensions which are used for calculations, lookups, information and reporting in various other systems.
+
+Due to working with legacy backend systems, I have overridden Model and Sync to provide non RESTfull persistence to classic asp backend.
