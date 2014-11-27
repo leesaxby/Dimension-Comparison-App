@@ -17,30 +17,30 @@ define(['backbone', 'collections/dimensions', 'views/dimension', 'views/explore'
       },
       initialize: function() {
         this.dimensions = new Dimensions();
-        this.dimensions.fetch({reset: true});
+        this.dimensions.fetch({ reset: true, data: {dimension_name: $('#dimension_names').val() }});
 
-        this.listenTo(this.dimensions, 'add', this.addExporeDim);
         this.listenTo(this.dimensions, 'reset', this.render);
         this.listenTo(this.dimensions, 'reset', this.addExploreHead);
+        this.listenTo(this.dimensions, 'add', this.addExploreDim);
         this.dimensions.on('change:edit', this.addEditDim, this);
       },
       render: function() {
         this.$el.html( this.template() );
         this.dimensions.each(function(dimension) {
-          this.addExporeDim( dimension );
+          this.addExploreDim( dimension );
         }, this)
         return this;
       },
       addExploreHead: function() {
          this.$('#explore-tbl').prepend( this.head_template( {collection: this.dimensions} ) );
       },
-      addExporeDim: function( dimension ) {
+      addExploreDim: function( dimension ) {
         var exploreView = new ExploreView( {model: dimension, parentView: this} );
         this.$('#explore-tbl').append( exploreView.render().el );
       },
       addEditDim: function( dimension ) {
         if( dimension.attributes.edit ) {
-          var dimView = new DimensionView( {model: dimension, parentView: this} );
+          var dimView = new DimensionView( {model: dimension, parentView: this, dim_collection: this.dimensions} );
           this.$('#edit-tbl').append( dimView.render().el );
         }
       },

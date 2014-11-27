@@ -11,8 +11,9 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
       },
       initialize: function(opt) {
         var editFlds = _.keys(_.omit(this.model.attributes, this.model.readOnlyFlds));
-
+        editFlds.push('start_date', 'end_date');
         this.parentView = opt.parentView;
+
         this.listenTo(this.model, 'destroy', this.removeView);
         this.model.on('change:visible', this.visible, this);
         this.model.on('change:edit', this.highlight, this);
@@ -20,7 +21,6 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
         for (var i = editFlds.length; i-- > 0; ) {
           this.model.on('change:'+editFlds[i] , this.render, this);
         }
-
       },
       render: function() {
         this.$el.html( this.template( { model: this.model } ) );

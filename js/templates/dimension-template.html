@@ -5,8 +5,8 @@
       edit = false;
 
   _.each(atts, function(val, key) {
-    _.each(editFlds, function(editable) {
-      if(val === editable) {
+    _.each(editFlds, function(i, editKey) {
+      if(key === editKey) {
         edit = true;
       }
     })
@@ -14,7 +14,11 @@
     if(edit) {
 %>    <td><input type="text" class="<%= key %>" value="<%= val %>"></td> <%
     } else {
-%>    <td class="<%= key + "_td" %>"><span class="<%= key %>"><%= val %></span></td> <%
+      if(model.attributes.last_record === 1 && key === 'end_date') {
+%>      <td><input type="text" class="<%= key %> datepicker" value="<%= val %>"></td> <%
+      } else {
+%>      <td class="<%= key + "_td" %>"><span class="<%= key %>"><%= val %></span></td> <%
+      }
     } %>
 <%
     edit = false;

@@ -4,24 +4,76 @@
 		"selected_items":
 		[
 			[
+				"json",
+				"jsonStr"
+			],
+			[
+				"re",
+				"removeView"
+			],
+			[
+				"addE",
+				"addExporeDimAll"
+			],
+			[
+				"die",
+				"dimensions"
+			],
+			[
+				"dime",
+				"dimensions"
+			],
+			[
+				"dimen",
+				"dimensions"
+			],
+			[
+				"save",
+				"saveData"
+			],
+			[
+				"di",
+				"dimension_name"
+			],
+			[
+				"dim",
+				"dimName"
+			],
+			[
+				"model",
+				"modelSplit"
+			],
+			[
+				"mo",
+				"modelSplit"
+			],
+			[
+				"up",
+				"updModel"
+			],
+			[
+				"omit",
+				"omitFlds"
+			],
+			[
+				"if",
+				"if	if"
+			],
+			[
+				"sear",
+				"searchFld"
+			],
+			[
+				"sea",
+				"searchCol"
+			],
+			[
 				"off",
 				"offHeight"
 			],
 			[
 				"match",
 				"matchesLen"
-			],
-			[
-				"dimen",
-				"dimension"
-			],
-			[
-				"dime",
-				"dimension"
-			],
-			[
-				"dim",
-				"dimensionFld"
 			],
 			[
 				"edi",
@@ -42,10 +94,6 @@
 			[
 				"search",
 				"search_col"
-			],
-			[
-				"sear",
-				"searchColSelect"
 			],
 			[
 				"addEx",
@@ -74,10 +122,6 @@
 			[
 				"tr",
 				"tr"
-			],
-			[
-				"di",
-				"dimensions"
 			],
 			[
 				"add",
@@ -264,10 +308,6 @@
 				"CLINIC_APPUSERS"
 			],
 			[
-				"if",
-				"if	if"
-			],
-			[
 				"cli",
 				"CLINIC_DATASERV"
 			],
@@ -400,10 +440,6 @@
 				"inline-block"
 			],
 			[
-				"up",
-				"updChkConfirm"
-			],
-			[
 				"upd",
 				"updChk"
 			],
@@ -478,42 +514,6 @@
 			[
 				"prot",
 				"prototype"
-			],
-			[
-				"inu",
-				"input"
-			],
-			[
-				"css",
-				"cssText"
-			],
-			[
-				"sele",
-				"selectCss"
-			],
-			[
-				"step",
-				"stepStonesPatent"
-			],
-			[
-				"mar",
-				"margin-left"
-			],
-			[
-				"nums",
-				"numsRev"
-			],
-			[
-				"set",
-				"setTimeout"
-			],
-			[
-				"vi",
-				"visible"
-			],
-			[
-				"ge",
-				"getElementById"
 			]
 		]
 	},
@@ -523,39 +523,47 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 244,
-				"line_ending": "Windows"
+				"buffer_size": 309,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "js/views/app.js",
 			"settings":
 			{
-				"buffer_size": 3354,
-				"line_ending": "Windows"
+				"buffer_size": 4945,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "js/templates/app-template.html",
+			"file": "js/app.js",
 			"settings":
 			{
-				"buffer_size": 403,
-				"line_ending": "Windows"
+				"buffer_size": 731,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "js/views/dimension.js",
 			"settings":
 			{
-				"buffer_size": 1318,
-				"line_ending": "Windows"
+				"buffer_size": 3538,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "js/views/explore.js",
 			"settings":
 			{
-				"buffer_size": 1339,
+				"buffer_size": 1703,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/create.asp",
+			"settings":
+			{
+				"buffer_size": 1746,
 				"line_ending": "Windows"
 			}
 		},
@@ -563,23 +571,23 @@
 			"file": "js/collections/dimensions.js",
 			"settings":
 			{
-				"buffer_size": 1589,
-				"line_ending": "Windows"
+				"buffer_size": 2022,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "css/app.css",
+			"file": "js/models/dimension.js",
 			"settings":
 			{
-				"buffer_size": 1906,
-				"line_ending": "Windows"
+				"buffer_size": 1455,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "//rvf01srvgrape01/wwwroot/Dictionary/css/Main.css",
+			"contents": "<!--#includes virtual = \"/common/header.asp\"-->\n<!--#includes virtual = \"/dimension_conn.asp\"-->\n<!--#include file=\"JSON_2.0.4.asp\"-->\n<!--#include file=\"JSON_UTIL_0.1.1.asp\"-->\n<%\ndim i, dimension_name, data, dataSplit, valueSplit, sqlLen, objRS, inserted_id, jsonStr\n\ninserted_id = \"\"\ndimension_name = Request(\"dimension_name\")\ndata = Request(\"data\")\n\ndata = Replace(data, \"{\", \"\")\ndata = Replace(data, \"}\", \"\")\ndata = Replace(data, chr(34), \"\")\n\ndataSplit = Split(data, \",\")\n\nErr.Clear\nOn Error Resume Next\n\n  txtSql = \"INSERT INTO \" & dimension_name & \" (\"\n\n  for i = 0 To uBound(dataSplit)\n    valueSplit = Split(dataSplit(i), \":\")\n      txtSql=txtSql & valueSplit(0) & \", \"\n  next\n\n  txtSql=txtSql & \" create_timestamp) VALUES (\"\n\n  for i = 0 To uBound(dataSplit)\n    valueSplit = Split(dataSplit(i), \":\")\n    If valueSplit(0) = \"start_date\" or valueSplit(0) = \"end_date\" Then\n      txtSql=txtSql & \"'\"  & RIGHT(valueSplit(1),4)&MID(valueSplit(1),4,2)&LEFT(valueSplit(1),2) &  \"',\"\n    else\n      txtSql=txtSql & \"'\" & valueSplit(1) & \"',\"\n    end if\n  next\n\n  txtSql=txtSql & \" getdate() )\"'\"\n  conn.execute txtSql\n\n  txtSql = \"SELECT @@Identity\"\n  Set objRS = conn.execute(txtSql)\n  inserted_id = objRS.Fields.Item(0).Value\n\n  if inserted_id <> \"\" then\n    'response.write \"{\"\"\" & \"id\" & \"\"\" : \"\"\" & inserted_id & \"\"\"}\"\n    txtSql = \"select row_number() over (partition by [system], system_key order by end_date desc) as last_record, * from dim_ward_dev where id = '\" & inserted_id & \"'\"'\n    jsonStr = QueryToJSON(Conn,txtSQL).Flush\n    response.ContentType = \"application/json\"\n    jsonStr = Replace(jsonStr, \"[\", \"\")\n    jsonStr = Replace(jsonStr, \"]\", \"\")\n    response.write jsonStr\n\n  end if\n\nIf Err.Number <> 0 Then\n\n  response.write Err.Description\n\nEnd If\nOn Error GoTo 0\n\n%>\n",
 			"settings":
 			{
-				"buffer_size": 3288,
+				"buffer_size": 1792,
 				"line_ending": "Windows"
 			}
 		}
@@ -628,33 +636,64 @@
 	},
 	"file_history":
 	[
-		"//rvf01srvgrape01/wwwroot/js/combo.js",
+		"//rvf01srvgrape01/wwwroot/ConsultantDirectory/ajax/UserAccess.asp",
+		"//rvf01srvgrape01/wwwroot/ConsultantDirectory/ajax/RecDetails.asp",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/get_dimensions.asp",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/update.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/SteppingStones.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/Services.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/RecordUpdate.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/AdditionsChartData.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/UserAccess.asp",
+		"//rvf01srvgrape01/wwwroot/dimension_conn.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/TableData.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/FitChartData.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/FieldDisplay.asp",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/delete.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/SteppingStonesUpdate.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/ajaxDevLinks/FieldSave.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/ajaxDevLinks/TableData.asp",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/ajaxDevLinks/AddRecord.asp",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/models/dimension.js",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/app.js",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/collections/dimensions.js",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/templates/app-template.html",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/css/app.css",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/views/dimension.js",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/dimensions.asp",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/templates/dimension-template.html",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/templates/app-template.html",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/models/dimension.js",
-		"//rvf01srvgrape01/wwwroot/Dictionary/css/jquery.dataTables.css",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/templates/explore-head-template.html",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/index.asp",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/views/app.js",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/css/default.css",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/css/jquery-ui.css",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/lib/jquery-ui.js",
 		"//rvf01srvgrape01/wwwroot/ComplexListGrape/css/Main.css",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/css/default.css",
+		"//rvf01srvgrape01/wwwroot/Golau/js/zebra_datepicker.src.js",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/lib/zebra_datepicker.js",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/js/modules/UTIL.js",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/views/explore.js",
+		"/C/Users/le042194/Desktop/New folder/css/app.css",
+		"//rvf01srvgrape01/wwwroot/Adhoc/Edit.asp",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/views/save.js",
+		"//rvf01srvgrape01/wwwroot/Dictionary/css/Main.css",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/lib/json2.js",
+		"//rvf01srvgrape01/wwwroot/Dictionary/css/style.css",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/templates/explore-head-template.html",
+		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/ajax/DeleteRecord.asp",
+		"//rvf01srvgrape01/wwwroot/Dictionary/Dictionary.asp",
+		"//rvf01srvgrape01/wwwroot/js/combo.js",
+		"//rvf01srvgrape01/wwwroot/Dictionary/css/jquery.dataTables.css",
+		"//rvf01srvgrape01/wwwroot/DimensionsLookup/index.asp",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/templates/explore-template.html",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/app.js",
 		"//rvf01srvgrape01/wwwroot/ComplexListGrape/css/FixedHead.css",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/collections/dimensions.js",
 		"//rvf01srvgrape01/wwwroot/Home/Home.asp",
 		"//rvf01srvgrape01/wwwroot/ComplexListGrape/main.asp",
-		"//rvf01srvgrape01/wwwroot/Dictionary/Dictionary.asp",
 		"//rvf01srvgrape01/wwwroot/Dictionary/DictionaryDev.asp",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/views/explore.js",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/css/app.css",
 		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/app.js",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/Dimensions.asp",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/templates/dimension-template.html",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/templates/app-template.html",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/SteppingStones.asp",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/create.asp",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/delete.asp",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/FieldDisplay.asp",
 		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/SelectUpdate.asp",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/TableData.asp",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/api/Dimensions2.asp",
@@ -668,7 +707,6 @@
 		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/collections/terms.js",
 		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/main.asp",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/lib/backbone.localStorage.js",
-		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/views/dimension.js",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/views/edit.js",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/css/Main.css",
 		"//rvf01srvgrape01/wwwroot/DimensionsLookup/js/Main.js",
@@ -725,37 +763,7 @@
 		"//rvf01srvgrape01/wwwroot/ComplexListGrapedev/template/doc-template.html",
 		"//rvf01srvgrape01/wwwroot/ComplexListGrapedev/js/main.js",
 		"//rvf01srvgrape01/wwwroot/ComplexListGrapedev/js/lib/text.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/template/doc-template.html",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/js/dtocdoc.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/DTOCDoc.html",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapedev/ajax/DeleteRecord.asp",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/js/lib/Underscore.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/DTOCDoc.asp",
-		"//rvf01srvgrape01/wwwroot/Home/HomeDev.asp",
-		"//rvf01srvgrape01/wwwroot/Test/backboneAppNew/js/views/todo.js",
-		"//rvf01srvgrape01/wwwroot/Test/backboneAppNew/js/views/app.js",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/routers/router.js",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/models/term.js",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/views/term.js",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/views/app.js",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/css/main.css",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/templates/list-item.html",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/index.html",
-		"//rvf01srvgrape01/wwwroot/Test/Glossary/js/lib/text.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapedev/js/modules/MAINLIST.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapedev/ajax/TableData.asp",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/ajax/TableData.asp",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/js/modules/STEPPINGSTONES.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/js/modules/DATASERV.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/js/modules/UTIL.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/js/modules/STEPPINGSTONES.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/js/app.js",
-		"//rvf01srvgrape01/wwwroot/Common/Header2.asp",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/js/modules/EVENTUTIL.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/ajax/UserAccess.asp",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/css/default.css",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrape/js/Main.js",
-		"//rvf01srvgrape01/wwwroot/ComplexListGrapeDev/ajax/FieldSave.asp"
+		"//rvf01srvgrape01/wwwroot/ComplexListGrape/template/doc-template.html"
 	],
 	"find":
 	{
@@ -773,6 +781,32 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"addExploreDimAll",
+			"fetc",
+			"},\n",
+			"createNew",
+			"create-new-dim",
+			"start_date_new",
+			"save-new-dim",
+			"datepicker",
+			"date",
+			".png",
+			"date",
+			"input",
+			"remove",
+			"destroy",
+			"datepicker",
+			"_",
+			"start_date_new",
+			"tr",
+			"console",
+			".png",
+			"edit-dim",
+			"dit",
+			"li",
+			"{\n",
+			"label",
+			"listtable",
 			"odd",
 			"border",
 			"roboto",
@@ -874,33 +908,7 @@
 			"steppingstones",
 			"stepCount",
 			"steppingstones",
-			"console",
-			"console#",
-			"console",
-			"rowclick",
-			"getdata",
-			"rowClick",
-			"getdata",
-			"DataTable",
-			"fnGetData",
-			"fnReloadAjax",
-			"fnajax",
-			"ssdisp",
-			"STEPPINGSTONES",
-			"ssdisp",
-			"fnReloadAjax",
-			"ssdisp",
-			"fnReloadAjax",
-			"ssDisp",
-			"location",
-			"filterColorHandler",
-			"columnFilter",
-			"initTable",
-			"createTable",
-			"dataTables",
-			"initTable",
-			"addHandler",
-			"location"
+			"console"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -946,7 +954,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -955,15 +963,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 244,
+						"buffer_size": 309,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								243,
-								243
+								112,
+								112
 							]
 						],
 						"settings":
@@ -974,7 +982,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -983,127 +991,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3354,
+						"buffer_size": 4945,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3022,
-								3022
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 615.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "js/templates/app-template.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 403,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								380,
-								380
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "js/views/dimension.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1318,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1262,
-								1262
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 45.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "js/views/explore.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1339,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								873,
-								879
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "js/collections/dimensions.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1589,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1475,
-								1475
+								998,
+								1011
 							]
 						],
 						"settings":
@@ -1113,67 +1009,218 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 180.0,
+						"translation.y": 135.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "css/app.css",
+					"buffer": 2,
+					"file": "js/app.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1906,
+						"buffer_size": 731,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1604,
-								1583
+								594,
+								594
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/CSS/CSS.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1260.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "js/views/dimension.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3538,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2537,
+								2537
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "js/views/explore.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1703,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								772,
+								772
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "api/create.asp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1746,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1620,
+								1620
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ASP/HTML-ASP.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 319.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "js/collections/dimensions.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2022,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								81,
+								81
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "js/models/dimension.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1455,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1080,
+								1080
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "//rvf01srvgrape01/wwwroot/Dictionary/css/Main.css",
+					"buffer": 8,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3288,
+						"buffer_size": 1792,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								584,
-								584
+								0,
+								1792
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/ASP/HTML-ASP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
-						"translation.x": -0.0,
-						"translation.y": 2610.0,
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]

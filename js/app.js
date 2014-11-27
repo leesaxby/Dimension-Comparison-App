@@ -6,7 +6,7 @@ require.config({
     'localStorage': 'lib/backbone.localStorage',
     'text': 'lib/text',
     'json2': 'lib/json2',
-    'zebra_datepicker': 'lib/zebra_datepicker'
+    'jquery-ui': 'lib/jquery-ui'
   },
   shim: {
     'underscore': {
@@ -16,16 +16,36 @@ require.config({
     backbone: {
       deps: ['jquery','underscore'],
       exports: 'Backbone'
+    },
+    'jquery-ui': {
+      deps: ['jquery']
     }
   }
 })
 
-require(['jquery', 'backbone', 'views/app'], function($, Backbone, AppView) {
+require(['jquery', 'underscore','backbone', 'views/app'], function($, _, Backbone, AppView) {
   Backbone.emulateHTTP = true;
   Backbone.emulateJSON = true;
 
-  var appView = new AppView();
-  appView.render();
-  $('#dimensions-app').html( appView.render().el );
+
+  function createApp() {
+    $.get('api/get_dimension_names.asp', function(data) {
+      _.each(data, function(obj) {
+        $('#dimension_names').append('<option value="' + obj.table_name + '">' + obj.table_name + '</option>')
+      })
+
+      var appView = new AppView();
+      appView.render();
+      $('#dimensions-app').html( appView.render().el );
+    });
+  }
+
+  createApp();
+
+
+  $('#dimension_names').on('change', createApp);
+
+
+
 
 })

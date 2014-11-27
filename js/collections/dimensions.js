@@ -1,7 +1,7 @@
-define(['jquery','backbone', 'models/dimension', 'localStorage'], function($, Backbone, Dimension, localStorage) {
+define(['jquery','backbone', 'models/dimension'], function($, Backbone, Dimension) {
 
   var Dimensions = Backbone.Collection.extend({
-    url: "api/dimensions.json",
+    url: "api/get_dimensions.asp",
     parse: function(response) {
       return response;
     },

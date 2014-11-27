@@ -4,7 +4,7 @@ html, body{
   font-family: arial;
   font-size: 12px;
 }
-table {
+#explore-tbl, #edit-tbl {
   width:100%;
   margin: 0px;
   margin-top: 10px;
@@ -12,7 +12,7 @@ table {
   border-collapse: collapse;
   white-space: nowrap;
 }
-th {
+#explore-tbl th {
   text-align: left;
   border: solid #989898;
   border-width: 0px 0px 2px 0px;
@@ -20,14 +20,16 @@ th {
   background: #2980b9;
   color: #ffffff;
 }
-tr {
+#explore-tbl, #edit-tbl tr {
   cursor: pointer;
 }
 td {
   padding: 3px 5px 3px 5px;
 }
-tr:nth-child(even) {background: #e7f2fa}
-tr:nth-child(odd) {background: #FFFFFF}
+#explore-tbl tr:nth-child(even) {background: #e7f2fa}
+#explore-tbl tr:nth-child(odd) {background: #FFFFFF}
+#edit-tbl tr:nth-child(even) {background: #e7f2fa}
+#edit-tbl tr:nth-child(odd) {background: #FFFFFF}
 button {
   font-size: 12px;
   font-weight: bold;
@@ -187,4 +189,9 @@ button {
   scrollbar-darkshadow-color: #FFFFFF;
   scrollbar-track-color: #F0F0F0;
   scrollbar-arrow-color: #FFFFFF;
+}
+#dimension_names {
+  padding: 0px;
+  margin: 0px;
+  margin-left: 20px;
 }
