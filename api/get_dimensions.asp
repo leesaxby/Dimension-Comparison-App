@@ -3,14 +3,15 @@
 <!--#include file="JSON_2.0.4.asp"-->
 <!--#include file="JSON_UTIL_0.1.1.asp"-->
 <%
-dim dimension_name
+dim dimension_name, keyword, jsonStr
 
 dimension_name = request("dimension_name")
+keyword = request("keyword")
 
 Err.Clear
 On Error Resume Next
 
-  txtSQL = "select row_number() over (partition by [system], system_key order by end_date desc) as last_record, * from " & dimension_name
+  txtSQL = "sp_dim_search '" & dimension_name & "','" & keyword & "', '500'"
 
   jsonStr = QueryToJSON(Conn,txtSQL).Flush
 

@@ -25,7 +25,7 @@ On Error Resume Next
       txtSql=txtSql & valueSplit(0) & ", "
   next
 
-  txtSql=txtSql & " create_timestamp) VALUES ("
+  txtSql=txtSql & "create_timestamp) VALUES ("
 
   for i = 0 To uBound(dataSplit)
     valueSplit = Split(dataSplit(i), ":")
@@ -45,7 +45,7 @@ On Error Resume Next
 
   if inserted_id <> "" then
     txtSql = "select row_number() over (partition by [system], system_key order by end_date desc) as last_record, * from " & dimension_name & " where id = '" & inserted_id & "'"'
-    rs.open txtSQL,Conn,3,1
+    rs.open txtSql,Conn,3,1
 
     jsonStr = "{"
 
@@ -55,6 +55,9 @@ On Error Resume Next
       next
     rs.movenext
     loop
+
+    rs.close
+    conn.close
 
     jsonStr = left(jsonStr, len(jsonStr)-1)
     jsonStr = jsonStr & "}"

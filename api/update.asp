@@ -25,6 +25,7 @@ On Error Resume Next
     else
       txtSql=txtSql & valueSplit(0) & " = '" & valueSplit(1) & "',"
     end if
+
   next
 
   txtSql=txtSql + " create_timestamp = getdate() WHERE id = '" & id & "'"

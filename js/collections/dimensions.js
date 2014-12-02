@@ -1,55 +1,26 @@
-define(['jquery','backbone', 'models/dimension'], function($, Backbone, Dimension) {
+define(['backbone', 'models/dimension'], function(Backbone, Dimension) {
 
   var Dimensions = Backbone.Collection.extend({
     url: "api/get_dimensions.asp",
-    parse: function(response) {
-      return response;
-    },
     model: Dimension,
 
-    searchFilter: function(keyword, searchCol) {
-      var field_value = "",
-          search = keyword.toLowerCase(),
-          values = "";
-
-      if(searchCol) {
-        this.each(function(dim) {
-          if(dim.get(searchCol) !== null && typeof(dim.get(searchCol)) !== 'undefined' ) {
-            field_value = dim.get(searchCol).toLowerCase();
-            if(field_value.search(search) === -1) {
-              dim.set({visible: false});
-            } else {
-              dim.set({visible: true});
-            }
-          } else {
-            dim.set({visible: false});
-          }
-        })
-      } else {
-        this.each(function(dim) {
-          values = _.values(dim.attributes).toString().toLowerCase();
-          if(values.search(search) === -1) {
-            dim.set({visible: false});
-          } else {
-            dim.set({visible: true});
-          }
-        })
-      }
-    },
+    //sets visible property to select blank records in provided column.
     blanksFilter: function(searchCol) {
       this.each(function(dim) {
-        _.each( _.pick(dim.attributes, searchCol ), function(att) {
-          if(att !== null) {
-            dim.set({visible: false})
+        _.each( _.pick( dim.attributes, searchCol ), function(att) {
+          if( att !== null ) {
+            dim.set({ visible: false });
           }
-        })
-      })
+        });
+      });
     },
-    visibleAll: function(keyword) {
+    //sets all models to visible true
+    visibleAll: function() {
       this.each(function(dimension) {
-        dimension.set({visible: true});
-      })
+        dimension.set({ visible: true });
+      });
     },
+    //returns array of terms based on the keyworkd and column provided.
     suggestFilter: function(keyword, searchCol) {
       var search_word = keyword.toLowerCase(),
           matches = [];
@@ -58,17 +29,17 @@ define(['jquery','backbone', 'models/dimension'], function($, Backbone, Dimensio
         _.each( _.pick(dim.attributes, searchCol ), function(att) {
           if( att !== null && typeof(att) !== 'undefined' ) {
             if(att.toLowerCase().search(search_word) > -1) {
-               matches.push(att );
+              matches.push(att );
             }
           }
-        })
-      })
+        });
+      });
 
-      return _.uniq(matches)
+      return _.uniq(matches);
     }
 
   });
 
   return Dimensions;
 
-})
+});
