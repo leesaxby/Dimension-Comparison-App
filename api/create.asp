@@ -15,20 +15,24 @@ data = Replace(data, chr(34), "")
 
 dataSplit = Split(data, ",")
 
+  for i = 0 To uBound(dataSplit)
+    dataSplit(i) = replace(dataSplit(i),"^",",")
+    dataSplit(i) = replace(dataSplit(i),":","¬",1,1)
+  next
 Err.Clear
 On Error Resume Next
 
   txtSql = "INSERT INTO " & dimension_name & " ("
 
   for i = 0 To uBound(dataSplit)
-    valueSplit = Split(dataSplit(i), ":")
+    valueSplit = Split(dataSplit(i), "¬")
       txtSql=txtSql & valueSplit(0) & ", "
   next
 
   txtSql=txtSql & "create_timestamp) VALUES ("
 
   for i = 0 To uBound(dataSplit)
-    valueSplit = Split(dataSplit(i), ":")
+    valueSplit = Split(dataSplit(i), "¬")
     If valueSplit(0) = "start_date" or valueSplit(0) = "end_date" Then
       txtSql=txtSql & "'"  & RIGHT(valueSplit(1),4)&MID(valueSplit(1),4,2)&LEFT(valueSplit(1),2) &  "',"
     else

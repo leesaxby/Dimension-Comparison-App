@@ -1,4 +1,4 @@
-define(['backbone', 'json2'], function(Backbone) {
+define(['backbone', 'constants', 'json2'], function(Backbone, constants) {
 
   var Dimension = Backbone.Model.extend({
     //edit: if true, model is added to the edit_collection and a view is rendered in the edit table.
@@ -9,14 +9,14 @@ define(['backbone', 'json2'], function(Backbone) {
       last_record: 0
     },
     //values not to be sent to server when persisting.
-    stale: ['id', 'edit', 'visible', 'last_record','create_timestamp', 'assoc_dimension_name'],
+    stale: constants.stale_arr,
     //array of properties not to be editable in the app. these fields will always be present in the data.
-    readOnlyFlds: ['id', 'start_date', 'end_date', 'system', 'system_key', 'system_description', 'edit', 'visible', 'last_record', 'create_timestamp'],
+    readOnlyFlds: constants.readonly_arr,
     //paths for non RESTful CRUD
     methodToURL: {
-      'create': 'api/create.asp',
-      'update': 'api/update.asp',
-      'delete': 'api/delete.asp'
+      'create': constants.create_url,
+      'update': constants.update_url,
+      'delete': constants.delete_url
     },
     //omit stale fields from data sent to server.
     toJSON: function() {
@@ -25,8 +25,15 @@ define(['backbone', 'json2'], function(Backbone) {
     //sends model id, dimension name and model values to server for each request method.
     sync: function(method, model, options) {
       var dimension_name = model.attributes.assoc_dimension_name,
-          updFlds = _.omit(model.attributes,  this.stale),
-          updStr = JSON.stringify(updFlds);
+          updFlds = _.omit(model.attributes,  this.stale);
+
+      for(var i in updFlds) {
+        if(updFlds[i]) {
+          updFlds[i] = updFlds[i].replace(/,/g , "^");
+        }
+      }
+
+      var updStr = JSON.stringify(updFlds);
 
       options = options || {};
       options.url = model.methodToURL[method.toLowerCase()];

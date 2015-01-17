@@ -1,7 +1,7 @@
-define(['backbone', 'models/dimension'], function(Backbone, Dimension) {
+define(['backbone', 'models/dimension', 'constants'], function(Backbone, Dimension, constants) {
 
   var Dimensions = Backbone.Collection.extend({
-    url: "api/get_dimensions.asp",
+    url: constants.get_url,
     model: Dimension,
 
     //sets visible property to select blank records in provided column.

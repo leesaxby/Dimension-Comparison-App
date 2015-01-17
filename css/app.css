@@ -3,15 +3,16 @@ html, body{
   margin: 0px;
   font-family: arial;
   font-size: 12px;
+  background: #EBEEED;
 }
 #explore-tbl, #edit-tbl {
   width:100%;
   margin: 0px;
-  margin-top: 10px;
   padding: 0px;
   border-collapse: collapse;
   white-space: nowrap;
 }
+#edit-tbl th,
 #explore-tbl th {
   text-align: left;
   border: solid #989898;
@@ -20,38 +21,47 @@ html, body{
   background: #2980b9;
   color: #ffffff;
 }
+.tbl-head-highlight {
+  background-color: #1b557a;
+}
+#edit-tbl th {
+  --border: 0px;
+}
 #explore-tbl, #edit-tbl tr {
   cursor: pointer;
 }
 td {
   padding: 3px 5px 3px 5px;
 }
-#explore-tbl tr:nth-child(even) {background: #e7f2fa}
-#explore-tbl tr:nth-child(odd) {background: #FFFFFF}
-#edit-tbl tr:nth-child(even) {background: #e7f2fa}
-#edit-tbl tr:nth-child(odd) {background: #FFFFFF}
-button {
-  font-size: 12px;
-  font-weight: bold;
-  font-family: arial;
-  background: none;
-  border: 0px;
-  color: #ff9900;
-  cursor: pointer;
+#explore-tbl td {
+    border: solid #f0f0f0;
+  border-width: 0px 1px 1px 0px;
+    background: #ffffff;
 }
-#main-search-button {
+
+button {
   cursor:pointer;
   background:#808080;
+  font-size: 12px;
   color:white;
   width:auto;
   overflow:visible;
   text-align:center;
-  margin-right:5px;
+  margin-left:5px;
   padding-top:2px;
   padding-bottom:2px;
   padding-right:10px;
   padding-left:10px;
   border: 0;
+}
+#edit-tbl button {
+  font-size: 12px;
+  font-weight: bold;
+ font-family: arial;
+  background: none;
+  border: 0px;
+  color: #ff9900;
+  cursor: pointer;
 }
 #explore-list {
   position: relative;
@@ -59,7 +69,7 @@ button {
   padding: 0px;
   padding-bottom:190px;
   margin: 0px;
-  background: #ffffff;
+  background: #EBEEED;
   overflow: hidden;
 }
 #edit-list {
@@ -75,7 +85,7 @@ button {
 }
 #edit-tbl {
   position: relative;
-  top: 15px;
+  top: 13px;
 }
 #edit-tbl input[type=text] {
   background:none;
@@ -123,9 +133,15 @@ button {
 .save, .edit, .remove {
   visibility: hidden;
 }
-#search-container {
+#head-container {
   width: 100%;
-  margin: 10px 0px 0px 10px;
+  margin: 10px 0px 10px 0px;
+  padding-bottom: 20px;
+}
+#search-container {
+  display: inline;
+  float: right;
+  margin-right: 20px;
 }
 #main-search {
   width: 200px;
@@ -133,39 +149,33 @@ button {
 }
 #main-search-lbl {
   display: inline-block;
-  margin: 0px 0px 0px 10px;
+  margin: 0px 5px 0px 5px;
   color: #989898;
   font-style: italic;
+}
+#paginate-conatainer {
+  display: inline;
+    float: left;
+  margin-left: 20px;
+}
+#paginate-up, #paginate-down {
+  display: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0px;
+  margin: 0px;
+  color: #ff9900;
+  cursor: pointer;
+}
+.page-info {
+  font-size: 14px;
+  color: #424B51;
 }
 #blanks-clear, #blanks-filter {
   display: none;
 }
-.suggest-container {
+#fix-header, #unfix-header {
   display: none;
-  position: absolute;
-  z-index: 99;
-  max-height: 150px;
-  max-width: 500px;
-  padding-right: 20px;
-  overflow:auto;
-  overflow-y:scroll;
-  overflow-x:hidden;
-}
-.suggest-list {
-  list-style: none;
-  padding: 0px;
-  margin: 0px;
-  background: #ffffff;
-  overflow: hidden;
-}
-.suggest-list li {
-  width: 100%;
-  font-size: 12px;
-  color: #ffffff;
-  margin: 0px 0px 2px 0px;
-  padding: 3px;
-  cursor: pointer;
-  background: #4f708f;
 }
 .save-container {
   position: fixed;
@@ -203,5 +213,37 @@ button {
   width: 200px;
   padding: 0px;
   margin: 0px;
-  margin-left: 20px;
+  margin-right: 20px;
+}
+#wait-container {
+  position:fixed;
+  height:100%;
+  width:100%;
+  display:none;
+  top:0px;
+  z-index:999;
+}
+#wait-inner {
+  position:fixed;
+  height:100%;
+  width:100%;
+  background:#ffffff;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=10)";
+  filter: alpha(opacity=70);
+  -moz-opacity:0.70;
+  -khtml-opacity: 0.70;
+  opacity: 0.70;
+}
+#wait-msg {
+  position:fixed;
+  top:30%;
+  left:40%;
+  z-index:98;
+  margin-top:-10px;
+  margin-left:-50px;
+  padding:20px;
+}
+#wait-msg h3 {
+  font-size: 42px;
+  color:#989898;
 }

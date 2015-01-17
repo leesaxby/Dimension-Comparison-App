@@ -1,11 +1,19 @@
 <div id="explore-list">
-  <div id="search-container">
-    <select id="dimension-names"></select>
-    <input type="text" placeholder="Search" id="main-search">
-    <input type="button" value="SEARCH" id="main-search-button">
-    <label for="main-search" id="main-search-lbl"></label>
-    <button id="blanks-filter">SHOW BLANKS</button>
-    <button id="blanks-clear">CLEAR</button>
+  <div id="head-container">
+    <div id="paginate-conatainer">
+      <select id="dimension-names"></select>
+      <a id="paginate-down"><<</a>
+      <label for="main-search" id="main-search-lbl"></label>
+      <a id="paginate-up">>></a>
+    </div>
+    <div id="search-container">
+      <input type="text" placeholder="Search" id="main-search">
+      <button id="main-search-button">SEARCH</button>
+      <button id="fix-header">FIX HEADER</button>
+      <button id="unfix-header">UNFIX HEADER</button>
+      <button id="blanks-filter">BLANKS</button>
+      <button id="blanks-clear">CLEAR</button>
+    </div>
   </div>
   <table id="explore-tbl"></table>
 </div>
@@ -15,8 +23,10 @@
     <div class="hide-arrow">&#x25BC;</div>
   </div>
   <table id="edit-tbl"></table>
-  <div class="suggest-container scroll">
-    <ul class="suggest-list"></ul>
+</div>
+<div id="wait-container">
+  <div id="wait-inner"></div>
+  <div id="wait-msg">
+    <h3>PLEASE WAIT</h3>
   </div>
 </div>
-

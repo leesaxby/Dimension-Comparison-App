@@ -19,7 +19,9 @@ On Error Resume Next
   txtSql = "UPDATE " & dimension_name & " set "
 
   for i = 0 To uBound(dataSplit)
-    valueSplit = Split(dataSplit(i), ":")
+    dataSplit(i) = replace(dataSplit(i),":","¬",1,1)
+    dataSplit(i) = replace(dataSplit(i),"^",",")
+    valueSplit = Split(dataSplit(i), "¬")
     If valueSplit(0) = "start_date" or valueSplit(0) = "end_date" Then
       txtSql=txtSql & valueSplit(0) & " = '"  & RIGHT(valueSplit(1),4)&MID(valueSplit(1),4,2)&LEFT(valueSplit(1),2) &  "',"
     else

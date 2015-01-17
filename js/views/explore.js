@@ -11,7 +11,8 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
       },
       initialize: function(opt) {
         //create array of editable fields to dynamically add listners
-        var editFlds = _.keys(_.omit(this.model.attributes, this.model.readOnlyFlds));
+        var editFlds = _.keys(_.omit(this.model.attributes, this.model.readOnlyFlds)),
+            editFldsLen = 0;
         //manually add start and end date as these are not always editable
         editFlds.push('start_date', 'end_date');
 
@@ -26,8 +27,9 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
         this.model.on('change:edit', this.highlight, this);
 
         //dynamically add listeners to editable fields. editable fields will vary by dataset
-        for (var i = editFlds.length; i-- > 0; ) {
-          this.model.on('change:'+editFlds[i] , this.render, this);
+        editFldsLen = editFlds.length;
+        for ( ; editFldsLen-- > 0; ) {
+          this.model.on('change:'+editFlds[editFldsLen] , this.render, this);
         }
 
       },
@@ -42,9 +44,9 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
       },
       highlight: function() {
         if(this.model.attributes.edit) {
-          this.$el.css({'background': '#ffb13b', 'color': '#ffffff'});
+          this.$el.find('td').css({'background': '#ffad34', 'color': '#ffffff', 'border': 'solid 1px #ffad34'});
         } else {
-          this.$el.css({'background': '', 'color': '#000000'});
+          this.$el.find('td').css({'background': '#ffffff', 'color': '#000000', 'border': 'solid 1px #f0f0f0'});
         }
       },
       visible: function() {

@@ -3,15 +3,18 @@
 <!--#include file="JSON_2.0.4.asp"-->
 <!--#include file="JSON_UTIL_0.1.1.asp"-->
 <%
-dim dimension_name, keyword, jsonStr
+dim dimension_name, fieldName, keyword, minRec, maxRec, jsonStr
 
 dimension_name = request("dimension_name")
 keyword = request("keyword")
+minRec = request("minRec")
+maxRec = request("maxRec")
+fieldName = request("field_name")
 
 Err.Clear
 On Error Resume Next
 
-  txtSQL = "sp_dim_search '" & dimension_name & "','" & keyword & "', '500'"
+  txtSQL = "sp_dim_search '" & dimension_name & "','" & fieldName & "','" & keyword & "', " & minRec & ", " & maxRec & " "
 
   jsonStr = QueryToJSON(Conn,txtSQL).Flush
 
