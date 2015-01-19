@@ -48,7 +48,7 @@ define(['jquery',
           saveData[ $(input).prop('class').split(' ')[0] ] = inputVal;
         });
         //set edit to false in the explore collection which explore views listen to and then remove highlighting
-        explore_collection.set({id: this.model.get("id"), edit: false});
+        this.explore_collection.set({id: this.model.get("id"), edit: false});
         this.model.save(saveData);
         //remove model from edit collection and also remove the view (row)
         this.edit_collection.remove(this.model);
