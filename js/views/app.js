@@ -9,7 +9,8 @@ define(['jquery',
         'data_service',
         'constants',
         'suggest',
-        'fixedheader'],
+        'fixedheader',
+        'alphanum'],
 
   function($, _, Backbone, Dimensions, DimensionView, ExploreView, appTemp, tblHeadTemp, data_service, constants) {
 
@@ -26,233 +27,282 @@ define(['jquery',
         'click #explore-tbl th, #fixed-header-clone th': 'filterColumnSelect',
         'click #blanks-filter': 'blankSearch',
         'click #blanks-clear': 'blanksClear',
-        'click #edit-view': 'editToggle',
-        'click #fix-header': 'fixHeader',
-        'click #unfix-header': 'unfixHeader'
+        'mousedown #edit-view': 'editMouseToggle',
+        'mouseup': 'editMouseUp'
       },
       initialize: function() {
-        var keyword = this.$('#main-search').val() || "";
+        var self = this;
+
+        this.$window = $(window);
+        this.selectedDimension = "",
+        this.mouseDown = false;
+        this.minRecord = 1;
+        this.maxRecord = constants.paginate_length;
         //get and populate dimension names select
+
+        this.exploreColl = new Dimensions();
+        this.editColl = new Dimensions();
+
+        this.listenTo(this.exploreColl, 'reset', this.addExploreDimAll);
+        this.listenTo(this.editColl, 'add', this.addEditDim);
+        this.listenTo(this.editColl, 'add', this.columnFit);
+
+        $(document).on('mousemove', function(e) { self.editListResize(e) });
+        this.$window.scroll( function() { self.scrollEditFormat.call(self) } ) ;
+        this.$window.resize( function() { self.resizeEditFormat.call(self) } );
+
+        // ajax call to populate select with dimension names
         this.getDimensionNames();
 
-        this.explore_collection = new Dimensions();
-        this.edit_collection = new Dimensions();
-
-        this.listenTo(this.explore_collection, 'reset', this.addExploreDimAll);
-        this.listenTo(this.explore_collection, 'add', this.addExploreDim);
-        this.listenTo(this.edit_collection, 'add', this.addEditDim);
       },
       render: function() {
         this.$el.html( this.template() );
+        this.$('.validate-me').alphanum({ allow: '(){}#:;.,?/+=_-!&%*|' })
+        this.setLocals();
         return this;
       },
-      //add table headers to expore table
+      setLocals: function() {
+        this.$editList = this.$('#edit-list');
+        this.$exploreTbl = this.$('#explore-tbl');
+        this.$editView = this.$('#edit-view');
+        this.$dimensionNames = this.$('#dimension-names');
+        this.$blanksFilter = this.$('#blanks-filter');
+        this.$blanksClear = this.$('#blanks-clear');
+        this.$mainSearch = this.$('#main-search');
+        this.$waitContainer = this.$('#wait-container');
+      },
+      // Add table headers to expore table
       addHeads: function() {
-        this.$('#explore-tbl, #edit-tbl').find('thead').remove();
-        this.$('#explore-tbl, #edit-tbl').prepend( this.tbl_head_template({ collection: this.explore_collection }) );
+        this.$exploreTbl.find('thead').remove();
+        this.$exploreTbl.prepend( this.tbl_head_template({ collection: this.exploreColl }) );
       },
-      //add individual rows to explore table if model matches currently selected dimension table
-      addExploreDim: function( dimension ) {
-        var dimension_name = dimension.get("assoc_dimension_name");
-
-        if( typeof(dimension_name) === 'undefined' || dimension_name === $('#dimension-names').val() ) {
-          var exploreView = new ExploreView({
-            model: dimension,
-            parentView: this,
-            explore_collection: this.explore_collection,
-            edit_collection: this.edit_collection
-          });
-          this.$('#explore-tbl').append( exploreView.render().el );
-        }
-      },
+      // Create all table row views from collection models
       addExploreDimAll: function() {
-        //create all table row views from collection models
-        if( this.explore_collection.models.length > 0 ) {
+        var exploreCollLen = this.exploreColl.models.length;
+        if( exploreCollLen ) {
           this.addHeads();
-          this.explore_collection.each(function(dimension) {
+          this.exploreColl.each(function( dimension ) {
             this.addExploreDim( dimension );
           }, this);
         }
       },
+      // Add individual rows to explore table if model matches currently selected dimension table
+      addExploreDim: function( dimension ) {
+        var dimension_name = dimension.get("assoc_dimension_name");
+
+        if( typeof( dimension_name) === 'undefined' || dimension_name === this.$dimensionNames.val() ) {
+          var exploreView = new ExploreView({
+            model: dimension,
+            parentView: this,
+            explore_collection: this.exploreColl,
+            edit_collection: this.editColl
+          });
+          this.$exploreTbl.append( exploreView.render().el );
+        }
+      },
       //create row in edit view when model is added to edit collection
       addEditDim: function( dimension ) {
+        var minRecord = this.minRecord,
+            maxRecord = this.maxRecord;
         //set property on model of associated dimension table
-        var dimension_name = this.$('#dimension-names').val();
-
-        dimension.set('assoc_dimension_name', dimension_name, {silent: true});
-        if( dimension.attributes.edit ) {
+        dimension.set('assoc_dimension_name', this.selectedDimension, {silent: true});
+       if( dimension.attributes.edit ) {
           var dimView = new DimensionView({
             model: dimension,
             parentView: this,
-            explore_collection: this.explore_collection,
-            edit_collection: this.edit_collection
+            explore_collection: this.exploreColl,
+            edit_collection: this.editColl,
+            minRecord: minRecord,
+            maxRecord: maxRecord
           });
           this.$('#edit-tbl').append( dimView.render().el );
         }
       },
       //toggle the visibility of the edit table panel
-      editToggle: function() {
-        this.$('#edit-list').toggleClass('edit-show, edit-hide');
-        this.$('#edit-tbl, .show-arrow, .hide-arrow').toggle();
+      editMouseToggle: function() {
+        this.mouseDown = !this.mouseDown;
+      },
+      editMouseUp: function() {
+        this.mouseDown = false;
       },
       //show and hide blacks filtering optins when selecting column header
       filterColumnSelect: function( e ) {
-        var head_class = $(e.target).prop('class');
+        var headClass = $(e.target).prop('class');
 
-        if( this.selected_column ) {
-          $('#explore-tbl, #fixed-header-clone').find('.' + this.selected_column).css('background', '#2980b9');
-          this.$('#blanks-filter, #blanks-clear').hide();
-          this.selected_column = "";
+        if( this.selectedCol ) {
+          this.$exploreTbl.find( '.' + this.selectedCol ).css({ 'background': '#2980b9' });
+          this.$('#fixed-header-clone').find( '.' + this.selectedCol ).css({ 'background': '#2980b9' });
+          this.$blanksFilter.hide();
+          this.$blanksClear.hide();
+          this.selectedCol = "";
         } else {
-          this.selected_column = head_class;
-          this.$('#blanks-clear').hide();
-          this.$('#blanks-filter').show();
-          $('#explore-tbl, #fixed-header-clone').find('.' + this.selected_column).css('background', '#1b557a');
+          this.selectedCol = headClass;
+          this.$blanksClear.hide();
+          this.$blanksFilter.show();
+          this.$exploreTbl.find( '.' + this.selectedCol ).css({ 'background': '#1b557a' });
+          this.$('#fixed-header-clone').find( '.' + this.selectedCol ).css({ 'background': '#1b557a' });
         }
-        this.explore_collection.visibleAll();
       },
       //filters to blank record for selected column
       blankSearch: function() {
-        var self = this,
-            keyword = this.keyword,
-            selected_column = this.selected_column;
-            dimension_name = this.$('#dimension-names').val();
-
-        data_service.get_record_count({
-          dimension_name: dimension_name,
-          field_name: selected_column,
-          keyword: keyword,
-          blankSearch: 1,
-          callback: function(data) {
-            self.record_count = data;
-            self.getSearchResults(1);
-          }
-        });
-
-        this.$('#blanks-filter, #blanks-clear').toggle();
+        this.mainSearch(1);
+        this.$blanksFilter.toggle();
+        this.$blanksClear.toggle();
       },
       blanksClear: function() {
-        this.$('#main-search').val('');
-        this.getSearchResults();
-        $('#blanks-filter, #blanks-clear').toggle();
+        this.$mainSearch.val('');
+        this.mainSearch('', '');
+        this.$blanksFilter.toggle();
+        this.$blanksClear.toggle();
       },
       dimensionChange: function(e) {
-        var dimension_name = $('#dimension-names').val(),
-            explore_collection = this.explore_collection,
-            edit_collection_len = this.edit_collection.models.length;
+        var exploreColl = this.exploreColl,
+            editCollLen = this.editColl.models.length;
 
-        if( dimension_name && this.dimension_name !== dimension_name ) {
+      if( this.$dimensionNames.val() && this.selectedDimension !== this.$dimensionNames.val() ) {
+          if( !editCollLen ) {
+            var self = this;
 
-          this.explore_collection._minRec = 1;
-          this.explore_collection._maxRec = constants.paginate_length;
+            this.selectedDimension = this.$dimensionNames.val();
+            this.record_count = this.dimensionDetails[ this.$dimensionNames.val() ];
+            this.selectedCol = "";
+            this.minRecord = 1;
+            this.maxRecord = constants.paginate_length;
 
-          if( !edit_collection_len ) {
-            var dimension_details = this.dimension_details,
-                dimension = _.filter(dimension_details, function(details) {
-                  return details.table_name === $('#dimension-names').val();
-                });
+            exploreColl.fetch({
+              reset: true,
+              data: {
+                dimension_name: this.selectedDimension,
+                minRec: this.minRecord,
+                maxRec: this.maxRecord
+              },
+              success: function() {
+                self.minRecord = _.min(exploreColl.pluck("rid")) || 0;
+                self.maxRecord = _.max(exploreColl.pluck("rid")) || 0;
 
-            this.dimension_name = $('#dimension-names').val();
-
-            this.unfixHeader();
-            $('#wait-container').show();
-            $('#blanks-filter, #blanks-clear').hide();
-            this.record_count = dimension[0].record_count;
-            this.selected_column = "";
-            this.getSearchResults();
+                $('#paginate-up, #paginate-down').show();
+                $('#main-search-lbl').html(
+                  '<span class="page-info">' + self.minRecord +' - '+
+                  self.maxRecord + ' of ' + self.record_count + '</span>'
+                );
+                self.$editList.css('width', self.$exploreTbl.width());
+                self.fixHeader();
+              },
+              error: function(err) {
+               alert("Error getting dimensions");
+              },
+              beforeSend: function() {
+                self.$waitContainer.show();
+                self.$blanksFilter.hide();
+                self.$blanksClear.hide();
+              },
+              complete: function() {
+                self.$waitContainer.hide();
+              }
+            });
           } else {
-            $('#dimension-names').val(this.dimension_name);
+            this.$dimensionNames.val(this.selectedDimension);
             alert("Please Remove edit records before changing dimensions");
           }
         }
-
       },
       search: function() {
-        var self = this,
-            keyword = this.keyword,
-            selected_column = this.selected_column;
-            dimension_name = this.$('#dimension-names').val();
+        var self = this;
+        this.keyword = this.$mainSearch.val() || "";
+        this.minRecord = 1;
+        this.maxRecord = constants.paginate_length;
 
-        this.keyword = this.$('#main-search').val() || "";
-        this.explore_collection._minRec = 1;
-        this.explore_collection._maxRec = constants.paginate_length;
+        var searchResults = data_service.get_record_count({
+                              dimension_name: self.$dimensionNames.val(),
+                              field_name: self.selectedCol,
+                              keyword: self.keyword
+                            });
 
-         data_service.get_record_count({
-           dimension_name: dimension_name,
-           field_name: selected_column,
-           keyword: keyword,
-           callback: function(data) {
-             self.record_count = data;
-             self.getSearchResults();
-           }
-         });
+        $.when( searchResults ).done(function(data) {
+          self.record_count = data;
+          self.mainSearch();
+        });
 
       },
       //fetches records from server based on provided seach word
-      getSearchResults: function(blankSearch) {
-        var explore_collection = this.explore_collection,
+      mainSearch: function(blankSearch) {
+
+        var self = this,
+            exploreColl = this.exploreColl,
             record_count = this.record_count,
             keyword = this.keyword,
-            selected_column = this.selected_column,
-            dimension_name = $('#dimension-names').val();
+            selectedCol = this.selectedCol;
 
-        this.$('#wait-container, #fix-header').show();
-        console.log(this.explore_collection);
-        this.explore_collection.fetch({
-           reset: true,
-           data: {
-             dimension_name: dimension_name,
-             field_name: selected_column,
-             keyword: keyword,
-             blankSearch: blankSearch,
-             minRec: explore_collection._minRec,
-             maxRec: explore_collection._maxRec
-           },
-           success: function() {
-             if( typeof(explore_collection.pluck("rid").len) !== 'undefined' ) {
-               explore_collection._minRec = _.min( explore_collection.pluck("rid") ),
-               explore_collection._maxRec = _.max( explore_collection.pluck("rid") );
-             }
-              $('#main-search-lbl').html(
-                '<span class="page-info">' + explore_collection._minRec +' - '+
-                explore_collection._maxRec +' of '+
-                record_count + '</span>'
-             );
-             $('#wait-container').hide();
-             $('#paginate-up, #paginate-down, #fix-header').show();
-             if(selected_column) {
-               $('#explore-tbl').find('.' + selected_column).css('background', '#1b557a');
-             }
-           }
-         });
+         exploreColl.fetch({
+            reset: true,
+            data: {
+              dimension_name: self.$dimensionNames.val(),
+              field_name: selectedCol,
+              keyword: keyword,
+              blankSearch: blankSearch,
+              minRec: this.minRecord + "",
+              maxRec: this.maxRecord + ""
+            },
+            success: function() {
+              if( typeof(exploreColl.pluck("rid").len) !== 'undefined' ) {
+                self.minRecord = _.min(exploreColl.pluck("rid"));
+                self.maxRecord = _.max(exploreColl.pluck("rid"));
+              }
+              if(record_count <= self.maxRecord) {
+                self.maxRecord = record_count;
+              }
+
+              var records = $('<span class="page-info">'+self.minRecord+' - '+self.maxRecord+' of '+record_count+'</span>');
+              $('#main-search-lbl').html( records );
+              self.$editList.css('width', self.$exploreTbl.width());
+              self.fixHeader();
+             // self.columnFit();
+              if(selectedCol) {
+                self.$exploreTbl.find('.' + selectedCol).css('background', '#1b557a');
+              }
+            },
+            error: function() {
+              alert("Error when getting dimensions");
+            },
+            beforeSend: function() {
+              self.$waitContainer.show();
+            },
+            complete: function() {
+              self.$waitContainer.hide();
+            }
+          });
       },
       paginate: function(e) {
-        var paginate_dir = e.target.id,
-            paginate_len = constants.paginate_length;
+        var paginateDirect = e.target.id,
+            paginateLen = constants.paginate_length,
+            recordCount = this.record_count,
+            maxRecord = this.maxRecord,
+            minRecord = this.minRecord,
+            exploreColl = this.exploreColl;
 
-        if(paginate_dir === 'paginate-up') {
-          if(this.explore_collection._maxRec < this.record_count) {
-            if( (this.record_count - this.explore_collection._maxRec) < paginate_len) {
-              this.explore_collection._maxRec = this.record_count;
-              this.explore_collection._minRec = this.record_count - paginate_len;
+        if( paginateDirect === 'paginate-up') {
+          if( maxRecord < recordCount ) {
+            if( ( recordCount - maxRecord ) < paginateLen ) {
+              this.maxRecord = recordCount;
+              this.minRecord = ( recordCount - paginateLen );
             } else {
-              this.explore_collection._minRec += paginate_len;
-              this.explore_collection._maxRec += paginate_len;
+              this.minRecord += paginateLen;
+              this.maxRecord += paginateLen;
             }
-            this.getSearchResults();
+            this.mainSearch();
           }
         }
 
-        if(paginate_dir === 'paginate-down') {
-          if(this.explore_collection._minRec > 1) {
-            if( this.explore_collection._minRec < paginate_len ) {
-              this.explore_collection._maxRec = paginate_len;
-              this.explore_collection._minRec = 1;
+        if( paginateDirect === 'paginate-down' ) {
+          if(minRecord > 1 ) {
+            if( minRecord < paginateLen ) {
+              this.maxRecord = paginateLen;
+              this.minRecord = 1;
             } else {
-              this.explore_collection._minRec -= paginate_len;
-              this.explore_collection._maxRec -= paginate_len;
+              this.minRecord -= paginateLen;
+              this.maxRecord -= paginateLen;
             }
-            this.getSearchResults();
+            this.mainSearch();
           }
         }
 
@@ -260,27 +310,36 @@ define(['jquery',
       //gets array of dimension names and record counts from server to populate dimension names select
       getDimensionNames: function() {
         var i = 0,
-            self = this,
-            table_name_str;
+            self = this;
 
-        data_service.get_dimension_names(function(data) {
-          var dimension_details_len = data.length;
-          self.dimension_details = data;
+        var getDims = data_service.get_dimension_names();
 
-          table_name_str += '<option value="">Select Dimension...</option>';
-          while( dimension_details_len-- ) {
-            table_name_str+= '<option value="' + data[dimension_details_len].table_name + '">' + data[dimension_details_len].table_name + '</option>';
+        $.when( getDims ).done(function(data) {
+          var dataLen = data.length,
+              dimensionDetails = {};
+
+          for(;i < dataLen; i++) {
+            dimensionDetails[data[i].table_name] = data[i].record_count
           }
-          $('#dimension-names').append(table_name_str);
+          self.dimensionDetails = dimensionDetails;
+
+          self.$dimensionNames.detach()
+                              .append( $('<option value="">Select Dimension...</option>') )
+
+          _.each(dimensionDetails, function(recCount, tableName) {
+            self.$dimensionNames.append( $('<option value="' + tableName + '">' + tableName + '</option>') );
+          })
+
+          self.$('#paginate-conatainer').prepend( self.$dimensionNames )
         });
+
       },
       //gets suggested words entered into edit table inputs, then appends them to a list.
       createSuggest: function( $input ) {
-        var showSuggest = this.showSuggest,
-            dimension_name = $('#dimension-names').val(),
+        var self = this,
+            showSuggest = this.showSuggest,
             keyword = $input.val(),
-            suggest_arr = [],
-            suggestLen = 0;
+            suggest_arr = [];
 
         if( typeof(this.timerId) !== 'undefined' ) {
           clearTimeout( this.timerId );
@@ -288,44 +347,81 @@ define(['jquery',
 
         if( keyword.length > 2 ) {
           this.timerId = setTimeout(function() {
-            var offset = $input.offset(),
-                offsetTop = (offset.top + 20);
+            var suggestions = data_service.get_suggestions({
+                                dimension_name: self.$dimensionNames.val(),
+                                field_name: $input.prop('class').split(' ')[0],
+                                keyword: keyword
+                              })
 
-            data_service.get_suggestions({
-              dimension_name: dimension_name,
-              field_name: $input.prop('class'),
-              keyword: keyword,
-              callback: function(data) {
-                if(data) {
-                  suggest_arr = data.split('^'),
-                  suggestLen = suggest_arr.length <= 10 ?  suggest_arr.length : 10;
-
-                  $('#edit-list').suggest({
-                    target_input: $input,
-                    items: suggest_arr,
-                    max_length: suggestLen,
-                    posTop: offsetTop,
-                    posLeft: offset.left
+            $.when( suggestions ).done(function(data) {
+              if(data) {
+                suggest_arr = data.split('^');
+                $('.suggest').suggest({
+                  target_input: $input,
+                    items:  suggest_arr
                   });
-
                 }
-              }
+            })
 
-            });
           }, 1000);
         }
       },
       //add suggested term to the input
       fixHeader: function() {
-        $('#explore-list').fixheader({
-          target_tbl: $('#explore-tbl')
-        });
-        $('#fix-header, #unfix-header').toggle();
+        $('#explore-list').fixheader({ target_tbl: this.$exploreTbl });
       },
-      unfixHeader: function() {
-        $('#fix-header').show();
-        $('#unfix-header').hide();
-      }
+      columnFit: function() {
+        var exploreTr = $($('#explore-tbl tbody').find('tr')[0]),
+            editTr = $($('#edit-tbl tbody').find('tr')),
+            exploreTd = null;
+
+        $(editTr).each(function(i, tr) {
+          $(tr).find('td').each(function(i, td) {
+            exploreTd = $(exploreTr).find('td');
+            $(td).css({ 'width': $(exploreTd[i]).width() + 'px' });
+          });
+        });
+      },
+      scrollEditFormat: function() {
+        var scrollLeft = this.$window.scrollLeft(),
+            scrollTop = this.$window.scrollTop(),
+            windowHeight = this.$window.height(),
+            editHeight = this.$editList.height(),
+            horizontalScroll = 0,
+            absoluteEditPosition = 0,
+            fixedEditPosition = 0;
+
+        if( this.$window.scrollLeft() !== horizontalScroll) {
+          horizontalScroll = scrollLeft;
+          absoluteEditPosition = ( scrollTop + windowHeight ) - editHeight;
+          this.$editView.css({'position': 'absolute', 'left': '0px'});
+          this.$editList.css({'position': 'absolute', 'left': '0px'});
+          this.$editList.css({'top': absoluteEditPosition});
+         } else {
+          fixedEditPosition = ( windowHeight - editHeight );
+          this.$editList.css({ 'position': 'fixed', 'top': fixedEditPosition, 'left': - scrollLeft });
+          this.$editView.css({' position': 'fixed' });
+        }
+      },
+      resizeEditFormat: function() {
+        var absolutePos = (this.$window.scrollTop() + this.$window.height()) - this.$editList.height();
+
+        this.$editList.css({'position': 'absolute', 'top': absolutePos});
+        this.$editView.css({'position': 'absolute'});
+        this.$editList.css('width', this.$exploreTbl.width());
+        this.columnFit();
+      },
+      editListResize: function(e) {
+        if( this.mouseDown ) {
+          var mouseY = e.pageY,
+              windowHeight = this.$window.height(),
+              windowTop = this.$window.scrollTop();
+        //if(mouseY < (windowHeight-50)) {
+            this.$editList.height( (windowHeight + 20) - (mouseY - windowTop) )
+                          .offset({ top: ( mouseY - 10 ) });
+        //}
+        }
+      },
     });
 
     return AppView;

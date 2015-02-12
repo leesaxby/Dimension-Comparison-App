@@ -12,6 +12,7 @@ define(['backbone', 'constants', 'json2'], function(Backbone, constants) {
     stale: constants.stale_arr,
     //array of properties not to be editable in the app. these fields will always be present in the data.
     readOnlyFlds: constants.readonly_arr,
+    hiddenFlds: constants.hidden_arr,
     //paths for non RESTful CRUD
     methodToURL: {
       'create': constants.create_url,

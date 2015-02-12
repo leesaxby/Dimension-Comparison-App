@@ -21,8 +21,11 @@ html, body{
   background: #2980b9;
   color: #ffffff;
 }
-.tbl-head-highlight {
-  background-color: #1b557a;
+#edit-tbl td,
+#explore-tbl td {
+    border: solid #f0f0f0;
+  border-width: 0px 1px 1px 0px;
+    background: #ffffff;
 }
 #edit-tbl th {
   --border: 0px;
@@ -30,15 +33,13 @@ html, body{
 #explore-tbl, #edit-tbl tr {
   cursor: pointer;
 }
-td {
-  padding: 3px 5px 3px 5px;
-}
-#explore-tbl td {
-    border: solid #f0f0f0;
-  border-width: 0px 1px 1px 0px;
-    background: #ffffff;
-}
 
+td {
+  padding: 3px 7px 3px 7px;
+}
+.tbl-head-highlight {
+  background-color: #1b557a;
+}
 button {
   cursor:pointer;
   background:#808080;
@@ -54,72 +55,93 @@ button {
   padding-left:10px;
   border: 0;
 }
+
 #edit-tbl button {
   font-size: 12px;
   font-weight: bold;
  font-family: arial;
   background: none;
   border: 0px;
-  color: #ff9900;
   cursor: pointer;
 }
 #explore-list {
   position: relative;
   width: 100%;
+  height: 100%;
   padding: 0px;
-  padding-bottom:190px;
+  padding-bottom:220px;
   margin: 0px;
   background: #EBEEED;
-  overflow: hidden;
+ -- overflow: hidden;
 }
 #edit-list {
   position: fixed;
+  height: 100px;
   width: 100%;
   bottom: 0px;
   z-index: 100;
   padding: 0px;
   margin: 0px;
   background: #ffffff;
-  border-top: solid 1px #989898;
-  overflow: auto;
+  --border-top: solid 1px #989898;
+  overflow: visible;
 }
 #edit-tbl {
-  position: relative;
-  top: 13px;
+    position: relative;
+  margin-top: 13px;
 }
 #edit-tbl input[type=text] {
   background:none;
   border:solid #d4d4d4;
-  border-width: 0px 0px 1px 0px;
-  text-align:center;
+  border-width: 0px 0px 0px 0px;
+  --text-align:center;
   color:#797979;
   font-style:italic;
   font-size: 12px;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
 }
 #edit-view {
   position: fixed;
   width: 100%;
+  height: 15px;
   z-index: 100;
   background: #34495e;
   padding: 0px;
   margin: 0px;
   cursor: pointer;
 }
-.show-arrow, .hide-arrow {
-  margin: 0 auto;
-  width: 40px;
-  font-size: 11px;
-  color: #ffffff;
-}
-.show-arrow {
+
+.show-controls {
   display: none;
 }
-.edit-show {
-  height: 190px;
+.control-container {
+  display: none;
+  position: absolute;;
+  padding: 5px 5px 5px 5px;
+  margin: 0px;
+  z-index: 999;
+  background: #e8e8e8;
+  border: solid 1px #d9dde0;
+  border-width: 0px 1px 1px 0px;
+  box-shadow:0 1px 2px #aaa;
 }
-.edit-hide {
-  height: 15px;
+.control-container ul {
+    padding: 0px;
+    margin: 0px;
 }
+.control-container li {
+  list-style: none;
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+.control-container button {
+  margin: 0px;
+  padding: 0px;
+}
+
 .main-controls, .edit-controls {
   padding: 0px;
   margin: 0px;
@@ -127,12 +149,22 @@ button {
 .edit-controls {
   display: none;
 }
-.save-new-dimension {
+.save-new-dimension-li {
   display: none;
 }
 .save, .edit, .remove {
-  visibility: hidden;
+ --visibility: hidden;
 }
+
+.main-controls button,
+.edit-controls button {
+  color: #424B51;
+  --padding: 0px;
+  margin: 0px;
+  padding: 4px;
+}
+
+
 #head-container {
   width: 100%;
   margin: 10px 0px 10px 0px;
@@ -247,3 +279,5 @@ button {
   font-size: 42px;
   color:#989898;
 }
+tr:nth-of-type(even) {background: #CCC}
+tr:nth-of-type(odd) {background: #FFF}

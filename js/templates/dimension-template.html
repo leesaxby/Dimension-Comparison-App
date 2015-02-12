@@ -1,5 +1,5 @@
 <%
-  var atts = _.omit(model.attributes, model.stale),
+  var atts = _.omit(model.attributes, model.hiddenFlds),
       readOnlyFlds = _.pick(atts, model.readOnlyFlds),
       editFlds = _.omit(atts, model.readOnlyFlds),
       edit = false;
@@ -12,7 +12,7 @@
     })
 
     if(edit) {
-%>    <td><input type="text" class="<%= key %>" value="<%= val %>"></td> <%
+%>    <td><input type="text" class="<%= key %> validate-me suggest" value="<%= val %>"></td> <%
     } else {
       if(model.attributes.last_record === 1 && key === 'end_date') {
 %>      <td><input type="text" class="<%= key %> datepicker" value="<%= val %>"></td> <%
@@ -24,17 +24,20 @@
     edit = false;
   })
 %>
-<td colspan="99">
-  <div class="main-controls">
-    <button class="save">SAVE</button>
-    <button class="edit">EDIT</button>
-    <button class="remove">CANCEL</button>
-  </div>
-  <div class="edit-controls">
-    <button class="new-dimension">NEW</button>
-    <button class="save-new-dimension">SAVE</button>
-    <button class="delete">DELETE</button>
-    <button class="cancel-new-dimension">CANCEL</button>
-  </div>
+<td class="show-controls" colspan="99">
+<div class="control-container">
+  <ul class="main-controls">
+    <li><button class="save">SAVE</button></li>
+    <li><button class="edit">EDIT</button></li>
+    <li><button class="remove">REMOVE</button></li>
+  </ul>
+
+  <ul class="edit-controls">
+    <li class="new-dimension-li"><button class="new-dimension">NEW</button></li>
+    <li class="save-new-dimension-li"><button class="save-new-dimension">SAVE</button></li>
+    <li><button class="delete">DELETE</button></li>
+    <li><button class="cancel-new-dimension">CANCEL</button></li>
+  </ul>
+</div>
 </td>
 

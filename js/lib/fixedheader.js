@@ -15,7 +15,10 @@
     function fixed_header_scroll() {
       tblTop = settings.target_tbl.scrollTop() + ( settings.target_tbl.find('th').outerHeight() + 10 );
       if($(window).scrollTop() > tblTop ) {
-        $('#fixed-header-clone').show()
+        $('#fixed-header-clone').css({
+          'width': settings.target_tbl.width(),
+          'left': - $(window).scrollLeft()
+        }).show()
       } else {
         $('#fixed-header-clone').hide()
       }

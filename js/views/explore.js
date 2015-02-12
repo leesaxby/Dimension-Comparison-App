@@ -39,11 +39,17 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
       },
       //add model to edit to collection. app view listens to models added and renders a view
       setEditDim: function() {
-        this.model.set({edit: true});
-        this.edit_collection.add(this.model);
+
+        if(this.model.get('edit')) {
+          this.model.set({edit: false});
+          this.edit_collection.remove(this.model);
+        } else {
+          this.model.set({edit: true});
+          this.edit_collection.add(this.model);
+        }
       },
       highlight: function() {
-        if(this.model.attributes.edit) {
+        if(this.model.get('edit')) {
           this.$el.find('td').css({'background': '#ffad34', 'color': '#ffffff', 'border': 'solid 1px #ffad34'});
         } else {
           this.$el.find('td').css({'background': '#ffffff', 'color': '#000000', 'border': 'solid 1px #f0f0f0'});

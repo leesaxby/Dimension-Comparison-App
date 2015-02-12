@@ -1,5 +1,5 @@
 <%
-  var atts = _.omit(model.attributes, model.stale);
+  var atts = _.omit(model.attributes, model.hiddenFlds);
   _.each(atts, function(prop) {
 %>
   <td><%= prop %></td>

@@ -1,36 +1,38 @@
-
 (function( $ ) {
 
   $.fn.suggest = function(options) {
 
-    var i = 0
-        list_html = "",
-
-        settings = $.extend({
-          max_length: 50,
+    var settings = $.extend({
           posTop: 0,
           posLeft: 0
         }, options);
 
-    if(!$('.suggest-container').length) {
-      this.append('<div class="suggest-container scroll"><ul class="suggest-list"></ul></div>')
+    var offset =  settings.target_input.offset(),
+        offsetTop = (offset.top + 20),
+        container = $('<div class="suggest-container"></div>'),
+        list = $('<ul></ul>')
+
+    var setValue = function() {
+      settings.target_input.val( $(this).text() ).focus();
     }
 
-    while(i < settings.max_length) {
-      list_html += '<li>'+ settings.items[i] +'</li>';
-      i++;
-    }
-
-    $('.suggest-list').html( list_html );
-    $('.suggest-container').on('click', 'li', function() {
-      settings.target_input.val( $(this).html() );
-      $(this).hide()
+    $.each(settings.items, function(i, val) {
+      list.append($('<li>'+ val +'</li>'));
     })
-    .show()
-    .offset({ 'top': settings.posTop, 'left': settings.posLeft });
+
+    if($('.suggest-container').length) {
+      $('.suggest-container').html(list);
+    } else {
+      container.append(list);
+      $('body').append(container);
+    }
+
+    $('.suggest-container').on('click.setvalue', 'li', setValue)
+                           .show()
+                           .offset({ 'top': offsetTop, 'left': offset.left });
 
     $('html').on('click', function() {
-      $('.suggest-container').off().hide()
+      $('.suggest-container').off('.setvalue').hide();
     });
 
     return this;

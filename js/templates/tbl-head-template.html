@@ -1,5 +1,5 @@
 <%
-  var atts = _.omit(collection.models[0].attributes, collection.models[0].stale);
+  var atts = _.omit(collection.models[0].attributes, collection.models[0].hiddenFlds);
       heads = _.keys(atts),
       headsLen = heads.length;
 %>

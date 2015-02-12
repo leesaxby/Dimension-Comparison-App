@@ -8,6 +8,7 @@ require.config({
     'text': 'lib/text',
     'json2': 'lib/json2',
     'jquery-ui': 'lib/jquery-ui',
+    'alphanum': 'lib/jquery.alphanum',
     'suggest': 'lib/suggest',
     'fixedheader': 'lib/fixedheader',
     'constants': 'constants',
@@ -19,6 +20,9 @@ require.config({
     },
     'fixedheader': {
       deps: ['jquery']
+    },
+    'alphanum': {
+      deps:['jquery']
     }
   }
 

@@ -3,17 +3,16 @@
 <!--#include file="JSON_2.0.4.asp"-->
 <!--#include file="JSON_UTIL_0.1.1.asp"-->
 <%
-dim dimension_name, fieldName, keyword, blank, i
+dim dimension_name, fieldName, keyword, i
 
 i = 0
 
 dimension_name = request("dimension_name")
 fieldName = request("field_name")
 keyword = request("keyword")
-blank = request("blankSearch")
 
 
-txtSQL = "sp_dim_search '" & dimension_name & "','" & fieldName & "','" & keyword & "', 1, 999999, '" & blank & "'"
+txtSQL = "sp_dim_search '" & dimension_name & "','" & fieldName & "','" & keyword & "', 1, 999999 "
 rs.open txtSQL,conn,3,1
 do while not rs.eof
   i=i+1
