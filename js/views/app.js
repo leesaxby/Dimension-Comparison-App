@@ -38,7 +38,6 @@ define(['jquery',
         this.mouseDown = false;
         this.minRecord = 1;
         this.maxRecord = constants.paginate_length;
-        //get and populate dimension names select
 
         this.exploreColl = new Dimensions();
         this.editColl = new Dimensions();
@@ -63,6 +62,7 @@ define(['jquery',
       },
       setLocals: function() {
         this.$editList = this.$('#edit-list');
+        this.$editTbl = this.$('#edit-tbl');
         this.$exploreTbl = this.$('#explore-tbl');
         this.$editView = this.$('#edit-view');
         this.$dimensionNames = this.$('#dimension-names');
@@ -70,6 +70,8 @@ define(['jquery',
         this.$blanksClear = this.$('#blanks-clear');
         this.$mainSearch = this.$('#main-search');
         this.$waitContainer = this.$('#wait-container');
+        this.$fixedHeaderClone = this.$('#fixed-header-clone');
+        this.$mainSearchLbl = this.$('#main-search-lbl');
       },
       // Add table headers to expore table
       addHeads: function() {
@@ -115,7 +117,7 @@ define(['jquery',
             minRecord: minRecord,
             maxRecord: maxRecord
           });
-          this.$('#edit-tbl').append( dimView.render().el );
+          this.$editTbl.append( dimView.render().el );
         }
       },
       //toggle the visibility of the edit table panel
@@ -131,7 +133,7 @@ define(['jquery',
 
         if( this.selectedCol ) {
           this.$exploreTbl.find( '.' + this.selectedCol ).css({ 'background': '#2980b9' });
-          this.$('#fixed-header-clone').find( '.' + this.selectedCol ).css({ 'background': '#2980b9' });
+          this.$fixedHeaderClone.find( '.' + this.selectedCol ).css({ 'background': '#2980b9' });
           this.$blanksFilter.hide();
           this.$blanksClear.hide();
           this.selectedCol = "";
@@ -140,7 +142,7 @@ define(['jquery',
           this.$blanksClear.hide();
           this.$blanksFilter.show();
           this.$exploreTbl.find( '.' + this.selectedCol ).css({ 'background': '#1b557a' });
-          this.$('#fixed-header-clone').find( '.' + this.selectedCol ).css({ 'background': '#1b557a' });
+          this.$fixedHeaderClone.find( '.' + this.selectedCol ).css({ 'background': '#1b557a' });
         }
       },
       //filters to blank record for selected column
@@ -181,7 +183,7 @@ define(['jquery',
                 self.maxRecord = _.max(exploreColl.pluck("rid")) || 0;
 
                 $('#paginate-up, #paginate-down').show();
-                $('#main-search-lbl').html(
+                self.$mainSearchLbl.html(
                   '<span class="page-info">' + self.minRecord +' - '+
                   self.maxRecord + ' of ' + self.record_count + '</span>'
                 );
@@ -253,7 +255,7 @@ define(['jquery',
               }
 
               var records = $('<span class="page-info">'+self.minRecord+' - '+self.maxRecord+' of '+record_count+'</span>');
-              $('#main-search-lbl').html( records );
+              self.$mainSearchLbl.html( records );
               self.$editList.css('width', self.$exploreTbl.width());
               self.fixHeader();
              // self.columnFit();
@@ -371,8 +373,8 @@ define(['jquery',
         $('#explore-list').fixheader({ target_tbl: this.$exploreTbl });
       },
       columnFit: function() {
-        var exploreTr = $($('#explore-tbl tbody').find('tr')[0]),
-            editTr = $($('#edit-tbl tbody').find('tr')),
+        var exploreTr = $(this.$exploreTbl.find('tbody').find('tr')[0]),
+            editTr = $(this.$editTbl.find('tbody').find('tr')),
             exploreTd = null;
 
         $(editTr).each(function(i, tr) {

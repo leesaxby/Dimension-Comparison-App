@@ -11,7 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
       },
       initialize: function(opt) {
         //create array of editable fields to dynamically add listners
-        var editFlds = _.keys(_.omit(this.model.attributes, this.model.readOnlyFlds)),
+        var editFlds = _.keys( _.omit( this.model.attributes, this.model.readOnlyFlds ) ),
             editFldsLen = 0;
         //manually add start and end date as these are not always editable
         editFlds.push('start_date', 'end_date');
@@ -29,9 +29,8 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
         //dynamically add listeners to editable fields. editable fields will vary by dataset
         editFldsLen = editFlds.length;
         for ( ; editFldsLen-- > 0; ) {
-          this.model.on('change:'+editFlds[editFldsLen] , this.render, this);
+          this.model.on('change:' + editFlds[editFldsLen], this.render, this);
         }
-
       },
       render: function() {
         this.$el.html( this.template( { model: this.model } ) );
@@ -39,17 +38,16 @@ define(['jquery', 'underscore', 'backbone', 'text!templates/explore-template.htm
       },
       //add model to edit to collection. app view listens to models added and renders a view
       setEditDim: function() {
-
-        if(this.model.get('edit')) {
-          this.model.set({edit: false});
-          this.edit_collection.remove(this.model);
+        if( this.model.get('edit') ) {
+          this.model.set({ edit: false });
+          this.edit_collection.remove( this.model );
         } else {
-          this.model.set({edit: true});
-          this.edit_collection.add(this.model);
+          this.model.set({ edit: true });
+          this.edit_collection.add( this.model );
         }
       },
       highlight: function() {
-        if(this.model.get('edit')) {
+        if( this.model.get('edit') ) {
           this.$el.find('td').css({'background': '#ffad34', 'color': '#ffffff', 'border': 'solid 1px #ffad34'});
         } else {
           this.$el.find('td').css({'background': '#ffffff', 'color': '#000000', 'border': 'solid 1px #f0f0f0'});
